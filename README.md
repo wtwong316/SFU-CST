@@ -1,2 +1,2 @@
 # SFU-CST
-A Novel Text-Based Chatbot Screening Tool for Mental Health Assessment with Generative A
+A Novel Text-Based Chatbot Screening Tool for Mental Health Assessment with Generative AI
