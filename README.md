@@ -34,7 +34,8 @@ Detecting multiple symptoms remains a challenge. Successful deployment in clinic
 
 
 ## Acknowledgement
-The authors would like to express their gratitude to all study participants for their support, to SJTU X-LANCE Lab for granting approval to access the D4 dataset. Their paper can be accessed via DOI: https://doi.org/10.48550/arXiv.2205.11764 . To get access to D4, please look at https://xlance.github.io/D4.
+The authors would like to express their gratitude to all study participants for their support, to SJTU X-LANCE Lab for granting approval to access the D4 dataset. Their paper can be accessed via DOI: https://doi.org/10.48550/arXiv.2205.11764 . 
+This a related githhub site for the D4_baseline https://github.com/BigBinnie/D4_baseline.git.
 
 ## License
 
