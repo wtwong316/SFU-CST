@@ -17,7 +17,11 @@ Our method achieves good accuracy, precision, recall, and F1 scores (>97%) when 
 Detecting multiple symptoms remains a challenge. Successful deployment in clinical settings requires further refinement and validation.
 
 ## Extensibility
+### Other Mental Health Assessment tests
+The developed system can extend and allowing for inclusion of General Anxiety Disorder-7 (GAD-7), General Health Questionnaire (GHQ) and Depression Anxiety Stress Scale (DASS-21) for the style of the questionnaires is similar to PHQ-9. We just need a set of the sample responses to fine-tune the pre-trained LLM to support the target assessment test.
 
+### Other Dialects
+Using translation tools, we have the capability to transform our dataset into various dialects. Looking ahead, with a sufficient number of native target speaking participants in our experiments, we will be able to evaluate the potential of CST in providing support for such dialect.
 
 ## Getting Started
 
