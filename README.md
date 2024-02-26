@@ -31,7 +31,7 @@ Detecting multiple symptoms remains a challenge. Successful deployment in clinic
 
 
 ## Authors
-
+Data Science Research Centre for Social Policies and Service, Saint Francis University, Hong Kong (https://www.sfu.edu.hk/dsrc)
 
 ## Acknowledgement
 The authors would like to express their gratitude to all study participants for their support, to SJTU X-LANCE Lab for granting approval to access the D4 dataset. Their paper can be accessed via DOI: https://doi.org/10.48550/arXiv.2205.11764 . 
