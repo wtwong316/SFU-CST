@@ -1,0 +1,23 @@
+Start:Q_Any_Symptoms#你有什么问题吗?
+Anhedonia:Confirm_State#有没有对以前喜欢的事情不感兴趣呢？
+Anhedonia:Incidence#在過去兩周內，您是否經常因為缺乏興趣或樂趣而煩惱？ 幾天、一半以上或幾乎每天？
+Anhedonia:Confirm_Topic_1#你對未來還有希望嗎？
+Depression_Mood:Confirm_State#你心情低落嗎？
+Depression_Mood:Incidence#在過去兩周內，您是否經常因為心情低落而煩惱？ 幾天、一半以上或幾乎每天？
+Depression:Confirm_Topic_1#你能告訴我是什么原因嗎？
+Insomnia:Confirm_State#想問一下，你睡得好嗎？
+Insomnia:Incidence#在過去兩周內，您是否經常因為睡眠情况而煩惱？ 幾天、一半以上或幾乎每天？
+Fatigue::Confirm_State#您在工作和生活中是否感到精神不振？不做任何事情就感覺很累嗎？
+Fatigue:Incidence#在過去兩周內，您是否經常因為感覺很累而煩惱？ 幾天、一半以上或幾乎每天？
+Eating_Disorder:Confirm_State#最近的吃饭情况怎么样呢？
+Eating_Disorder:Incidence#在過去兩周內，您是否經常因為吃饭情况而煩惱？ 幾天、一半以上或幾乎每天？
+Inferiority:Confirm_State#你是不是有點自卑？會覺得自己拖累了別人嗎？
+Inferiority:Incidence#在過去兩周內，您是否經常因為覺得自己拖累了別人而煩惱？ 幾天、一半以上或幾乎每天？
+Concentration_Difficulty:Confirm_State#你的注意力還好嗎？
+Concentration_Difficulty:Incidence#在過去兩周內，您是否經常因為注意力不好而煩惱？ 幾天、一半以上或幾乎每天？
+Mental_State:Confirm_State#你是否感覺你的大腦正在變慢？反應遲鈍？思維遲鈍？
+Mental_State:Incidence#在過去兩周內，您是否經常因為反應或者思維遲鈍而煩惱？ 幾天、一半以上或幾乎每天？
+Suicide_Ideation:Confirm_State#你有沒有想過傷害自己？
+Suicide_Ideation:Incidence#在過去兩周內，您是否經常因為想傷害自己而煩惱？ 幾天、一半以上或幾乎每天？
+End:Confirm_State#你還有什麼要告訴我的嗎？
+End:End#諮詢到此結束，祝好

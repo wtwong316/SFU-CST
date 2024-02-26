@@ -1,0 +1,16 @@
+I feel very bad recently, can I talk to you?#Depression_Mood:Confirm_State
+Well, I can’t get enough energy to do things every day, and I feel that everything is very boring.#Anhedonia:State_Confirmed
+It started in September, and it’s been almost two months now.#Anhedonia:Topic_1_Confirmed
+There may be some, I am a direct PhD student, this year is my second year. In the first year, I feel good in class. It is a bit difficult but I can follow it.#Anhedonia:Topic_2_Confirmed
+I was in a bad mood in class, and now I feel like a waste in the laboratory, I don’t know anything.#Depression_Mood:State_Confirmed,Inferiority:Confirm_State
+I'm in a bad mood most of the time, no difference, doctor.#Depression_Mood:Topic_1_Confirmed
+I feel that hope is getting less and less, alas, graduation will be a problem in the current state.#Depression_Mood:Topic_2_Confirmed
+Well, I feel like the teacher chose a student who doesn't know anything, and I can't help the colleagues at all, I will only cause trouble for them.#Inferiority:State_Confirmed
+Sometimes I suddenly feel very irritable. At this time, I can't control myself and want to hit myself.#Mental_State:Confirm_State,Suicide_Ideation:State_Confirmed
+Alas, thank you doctor, sometimes I feel like I want to talk to someone, and I talk to myself when there is no one.#Mental_State:State_Confirmed
+Hmm, I feel like this, I feel like my brain is a mess, and my reaction is much slower than before. I don’t know if it’s because I didn’t sleep well.#Mental_State:Topic_1_Confirmed,Insomnia:Confirm_State
+No, it just takes a long time to fall asleep, and my mind is always thinking wildly.#Insomnia:State_Confirmed
+The appetite is getting worse and worse. It used to be average, but now I can’t eat a bowl of rice.#Eating_Disorder:State_Confirmed
+Well, it’s so-so, I feel that I’m not as close as I used to be with my roommates, and we don’t chat much in the dormitory, we just do our own thing.#Social_Function:State_Confirmed
+Concentration is normal.#Concentration_Difficulty:State_Confirmed
+no more questions.#End:State_Confirmed

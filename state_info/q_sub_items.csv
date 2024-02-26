@@ -1,0 +1,11 @@
+Start,Q_Any_Topics,End
+Anhedonia,Confirm_State,Incidence,End
+Depression_Mood,Confirm_State,Incidence,End
+Insomnia,Confirm_State,Incidence,End
+Fatigue,Confirm_State,Incidence,End
+Eating_Disorder,Confirm_State,Incidence,End
+Inferiority,Confirm_State,Incidence,End
+Concentration_Difficulty,Confirm_State,Incidence,End
+Mental_State,Confirm_State,Incidence,,End
+Suicide_Ideation,Confirm_State,Incidence,End
+End,Confirm_State,End
