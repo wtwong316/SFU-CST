@@ -32,7 +32,9 @@ git clone https://github.com/wtwong316/SFU-CST.git
 cd SFU-CST
 ```
 #### Setup the virtual environment
+make sure you have python3.10 installed and can be accessed.
 ```shell
+python3.10 -m venv ./venv
 source venv/bin/activate
 ```
 #### Install dependencies with pip
