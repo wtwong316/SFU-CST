@@ -26,10 +26,23 @@ Using translation tools, we have the capability to transform our dataset into va
 ## Getting Started
 
 ### Environment Setup
-
-
-### Usage
-
+#### Download this repository
+```shell
+git clone https://github.com/wtwong316/SFU-CST.git
+cd SFU-CST
+```
+#### Setup the virtual environment
+```shell
+source venv/bin/activate
+```
+#### Install dependencies with pip
+```shell
+pip install -r requirments.txt
+```
+#### Run the program
+```shell
+python webdemo.py
+```
 
 ### Web Demo
 
