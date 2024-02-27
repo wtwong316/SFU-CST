@@ -24,7 +24,7 @@ The developed system can extend and allowing for inclusion of General Anxiety Di
 Using translation tools, we have the capability to transform our dataset into various dialects. Looking ahead, with a sufficient number of native target speaking participants in our experiments, we will be able to evaluate the potential of CST in providing support for such dialect.
 
 ## Getting Started
-
+!!! This project is under development. If everything runs well, it will be announced here.
 ### Environment Setup
 #### Download this repository
 ```shell
