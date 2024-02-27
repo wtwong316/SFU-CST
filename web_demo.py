@@ -11,7 +11,7 @@ from utilities.utilities import get_symptoms
 from utilities.utilities import (get_state, is_doctor_confirming_symptom, is_symptom_topic_confirmed, is_topic_exist,
                                  is_topic_match)
 
-import mdtex2html
+# import mdtex2html
 
 import torch
 import transformers
@@ -19,13 +19,12 @@ from transformers import (
     AutoConfig,
     AutoModel,
     AutoTokenizer,
-    AutoTokenizer,
     DataCollatorForSeq2Seq,
     HfArgumentParser,
     Seq2SeqTrainingArguments,
     set_seed,
 )
-from datasets import load_dataset
+# from datasets import load_dataset
 from ptuning.arguments import ModelArguments, DataTrainingArguments
 from trainer_seq2seq import Seq2SeqTrainer
 import logging
@@ -350,7 +349,7 @@ def clear_history():
 
 with gr.Blocks() as demo:
 
-    gr.HTML("""<h1 align="center">Data Science Research Center<br/>Caritas Institute of Higher Education<br/>Depression Risk Assessment Chatbot</h1>""")
+    gr.HTML("""<h1 align="center">Data Science Research Centre<br/>Saint Francis University<br/>Chatbot Screening Tool (CST) for mental health</h1>""")
 
     #chatbot = gr.Chatbot().style(height=600)
     chatbot = gr.Chatbot(height=600)
@@ -410,6 +409,8 @@ def main():
     transformers.utils.logging.enable_explicit_format()
 
     # Log on each process the small summary:
+    # The parsing argument routine in hf_argparser.py parse_args_into_dataclasses() seems incorrect, hardcode set here
+    training_args.local_rank = -1
     logger.warning(
         f"Process rank: {training_args.local_rank}, device: {training_args.device}, n_gpu: {training_args.n_gpu}"
         + f"distributed training: {bool(training_args.local_rank != -1)}, 16-bits training: {training_args.fp16}"
