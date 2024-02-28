@@ -95,7 +95,7 @@ Here is the sample of a session of doctor-patient dialogues in a conversation.
 | 病人 | 没有什么 |
 
 ### Web Demo
-Under Construction
+![web-demo](resources/CST-Screenshot.jpg)
 
 ## Authors
 Data Science Research Centre for Social Policies and Service, Saint Francis University, Hong Kong (https://www.sfu.edu.hk/dsrc)
