@@ -7,7 +7,7 @@ Depression_Mood:Incidence#在过去两周内，您是否经常因为心情低落
 Depression:Confirm_Topic_1#你能告诉我是什么原因吗？
 Insomnia:Confirm_State#最近睡眠还好吗？ 有没有难以入睡或者容易醒的情况呀?
 Insomnia:Incidence#在过去两周内，您是否经常因为难以入睡或者容易醒的情况而烦恼, 有几天、一半以上或几乎每天？
-Fatigue::Confirm_State#有没有觉得比较疲倦或者疲惫吗？
+Fatigue:Confirm_State#有没有觉得比较疲倦或者疲惫吗？
 Fatigue:Incidence#在过去两周内，您是否经常因为比较疲倦或者疲惫的情况而烦恼, 有几天、一半以上或几乎每天？
 Eating_Disorder:Confirm_State#最近的吃饭情况怎么样呢？
 Eating_Disorder:Incidence#在过去两周内，您是否经常因为吃饭情况而烦恼, 有几天、一半以上或几乎每天？

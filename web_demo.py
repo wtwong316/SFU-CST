@@ -1,17 +1,13 @@
 import os
 import sys
 from datasets import Dataset
-import json
 import gradio as gr
-import mdtex2html
 import time
 
 from utilities.io_utilities import (read_states, read_topics_in_states, read_doctor_messages, read_conversation_match)
 from utilities.utilities import get_symptoms
 from utilities.utilities import (get_state, is_doctor_confirming_symptom, is_symptom_topic_confirmed, is_topic_exist,
                                  is_topic_match)
-
-# import mdtex2html
 
 import torch
 import transformers
@@ -28,6 +24,8 @@ from transformers import (
 from ptuning.arguments import ModelArguments, DataTrainingArguments
 from trainer_seq2seq import Seq2SeqTrainer
 import logging
+from queuelib.rrqueue import RoundRobinQueue
+from queuelib.queue import FifoMemoryQueue
 
 data_args = None
 model_args = None
@@ -54,6 +52,7 @@ anhedonia_points = 0
 sleeping_disorder_points = 0
 eating_disorder_points = 0
 depression_mood_points = 0
+comfort_rrq = None
 
 
 def post_process(self, y):
@@ -208,7 +207,7 @@ def predict(predict_dataset):
 
 
 def convert_data(question, answer):
-    if '在過去兩周內' in question:
+    if '在过去两周内' in question:
         q_incidence = {"prompt": [
             "Instruction:- 以下是醫生與病人的對話, 病人與PHQ-9症狀的出現頻率密切相關嗎？ 如果不確定，請回答'Unknown：1'。否則請回答'State1#incidence'的出現頻率(從低到高),'State1#incidence:1', 'State1#incidence:2' 或 'State1#incidence:3'。\nInput:- {0}\n{1}\n"],
                        "response": ["State1#incidence:1"]}
@@ -234,9 +233,15 @@ def convert_data(question, answer):
 
 
 def process_state(history, text):
-    global response, stale_state_1, stale_state_2, stale_state_3
+    global response, stale_state_1, stale_state_2, stale_state_3, comfort_rrq
     stale_state_1 = stale_state_2 = stale_state_3 = False
-    predict_dataset = convert_data(history[-1][0], '病人: ' + text)
+    if len(history) == 1:
+        predict_dataset = convert_data(history[-1][0], '病人: ' + text)
+    else:
+        state = state_dpq.peek_head()[0]
+        topic = states[state].peek_head()[0]
+        doctor_message = doctor_messages[state][topic]
+        predict_dataset = convert_data('医生: ' + doctor_message, '病人: ' + text)
     result = predict(predict_dataset)
     history[-1][1] = '病人: ' + text
     current_state, cs_priority = state_dpq.peek_head()
@@ -248,6 +253,7 @@ def process_state(history, text):
             if symptom_state in states:
                 if is_topic_exist(states[symptom_state], symptom_topic):
                     if symptom_state == current_state:
+                        # The symptom detected is the same as the current state
                         raise_state = process_sub_state(symptom_state, states[symptom_state], symptom_topic,
                                                         symptom_topic_value, text)
                         if raise_state is not None:
@@ -258,6 +264,8 @@ def process_state(history, text):
                             else:
                                 state_dpq.change_priority(raise_state, (cs_priority + right_child_priority)/2 - 1)
                     else:
+                        # The symptom detected is not the same as current state.
+                        # It may be a single symptom or one of the detected symptoms
                         if current_state == 'Start' and states[current_state].peek_head()[0] == 'Q_Any_Topics':
                             left_child_state, left_child_priority = state_dpq.peek_left_child(0)
                             right_child_state, right_child_priority = state_dpq.peek_right_child(0)
@@ -312,7 +320,10 @@ def process_state(history, text):
     elif stale_state_3:
         response = "抱歉，內部錯誤...\n" + doctor_messages[current_state][topic]
     else:
-        response = '医生: ' + doctor_messages[current_state][topic]
+        if symptom_topic_value == '1' and symptom_topic == 'Confirm_State':
+            response = '医生: ' + comfort_rrq.pop() + doctor_messages[current_state][topic]
+        else:
+            response = '医生: ' + doctor_messages[current_state][topic]
 
     return history, gr.update(value="", interactive=False)
 
@@ -352,7 +363,7 @@ with gr.Blocks() as demo:
     gr.HTML("""<h1 align="center">Data Science Research Centre<br/>Saint Francis University<br/>Chatbot Screening Tool (CST) for mental health</h1>""")
 
     #chatbot = gr.Chatbot().style(height=600)
-    chatbot = gr.Chatbot(height=600)
+    chatbot = gr.Chatbot(height=700)
     with gr.Row():
         with gr.Column(scale=4):
             with gr.Column(scale=12):
@@ -366,7 +377,7 @@ with gr.Blocks() as demo:
             #top_p = gr.Slider(0, 1, value=0.7, step=0.01, label="Top P", interactive=True)
             #temperature = gr.Slider(0, 1, value=0.95, step=0.01, label="Temperature", interactive=True)
 
-            gr_total = gr.Number(value=total_points, label="Total Points", interactive=False)
+            gr_total = gr.Number(value=total_points, label="Score", interactive=False)
     txt_msg = submitBtn.click(process_state, [chatbot, user_input], [chatbot, user_input], queue=False).then(
         bot, chatbot, chatbot
     )
@@ -379,9 +390,24 @@ with gr.Blocks() as demo:
         return total_points
 
 
-def main():
-    global model, tokenizer, trainer, max_seq_length, model_args, training_args, data_args
+def memory_queue_factory(priority):
+    return FifoMemoryQueue()
 
+
+def initial_comfort_rrq():
+    global comfort_rrq
+    comfort_rrq = RoundRobinQueue(qfactory=memory_queue_factory)
+    comfort_rrq.push('嗯嗯! 我明白了。', 0)
+    comfort_rrq.push('好的, 我了解了。', 1)
+    comfort_rrq.push('好的', 2)
+    comfort_rrq.push('明白', 3)
+    comfort_rrq.push('啊，这样子', 4)
+
+
+def main():
+    global model, tokenizer, trainer, max_seq_length, model_args, training_args, data_args, comfort_rrq
+
+    initial_comfort_rrq()
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments))
     if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
         # If we pass only one argument to the script and it's the path to a json file,
