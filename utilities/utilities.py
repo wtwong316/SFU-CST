@@ -69,8 +69,18 @@ def get_symptoms(text, current_state):
         for item in items:
             topics.append(item)
         # deduplicate identified symptoms from LLM
-        return list(set(topics))
-    return None
+        topics = list(set(topics))
+    if len(topics) > 1:
+        sorted_topics = list()
+        for topic in topics:
+            state = get_state(topic)
+            if state[0] == current_state:
+                sorted_topics.insert(0, topic)
+            else:
+                sorted_topics.append(topic)
+        return sorted_topics
+    else:
+        return topics
 
 
 def get_state(symptom):
@@ -88,7 +98,7 @@ def is_doctor_confirming_symptom(topic):
 
 
 def is_symptom_topic_confirmed(topic):
-    if 'Confirmed' in topic:
+    if 'Incidence' in topic:
         return True
     else:
         return False

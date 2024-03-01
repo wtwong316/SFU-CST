@@ -24,7 +24,6 @@ from transformers import (
 from ptuning.arguments import ModelArguments, DataTrainingArguments
 from trainer_seq2seq import Seq2SeqTrainer
 import logging
-from queuelib.rrqueue import RoundRobinQueue
 from queuelib.queue import FifoMemoryQueue
 
 data_args = None
@@ -52,7 +51,7 @@ anhedonia_points = 0
 sleeping_disorder_points = 0
 eating_disorder_points = 0
 depression_mood_points = 0
-comfort_rrq = None
+comfort_q = None
 
 
 def post_process(self, y):
@@ -140,8 +139,10 @@ def process_sub_state(state, topic_queue, topic, topic_value, text):
                 stale_state_3 = True
         elif topic == 'Confirm_State':
             if topic_value.isnumeric():
+                # If symptom is negative, we don't ask the incidence
                 if int(topic_value) == 0:
                     topic_queue.remove_min()
+        # remove the current topic
         topic_queue.remove_min()
     else:
         # handle the response with the later topic confirmed in the same state
@@ -233,7 +234,7 @@ def convert_data(question, answer):
 
 
 def process_state(history, text):
-    global response, stale_state_1, stale_state_2, stale_state_3, comfort_rrq
+    global response, stale_state_1, stale_state_2, stale_state_3, comfort_q
     stale_state_1 = stale_state_2 = stale_state_3 = False
     if len(history) == 1:
         predict_dataset = convert_data(history[-1][0], '病人: ' + text)
@@ -248,6 +249,7 @@ def process_state(history, text):
     symptoms = get_symptoms(result, current_state)
 
     if symptoms is not None:
+        # need to handle multiple symptoms in one patient response
         for symptom in symptoms:
             symptom_state, symptom_topic, symptom_topic_value = get_state(symptom)
             if symptom_state in states:
@@ -266,6 +268,7 @@ def process_state(history, text):
                     else:
                         # The symptom detected is not the same as current state.
                         # It may be a single symptom or one of the detected symptoms
+                        # In Start state
                         if current_state == 'Start' and states[current_state].peek_head()[0] == 'Q_Any_Topics':
                             left_child_state, left_child_priority = state_dpq.peek_left_child(0)
                             right_child_state, right_child_priority = state_dpq.peek_right_child(0)
@@ -276,12 +279,12 @@ def process_state(history, text):
                             states[current_state].remove_min()
                             # In the beginning, it is in start state.
                             # if the patient's message confirm a topic in that state and that topic exists
-                            # in the topic queue, them remove it.
+                            # in the topic queue, them remove it and goto incidence topic.
                             if (states[symptom_state].peek_head()[0] == 'Confirm_State' and
                                     symptom_topic == 'Confirm_State' and symptom_topic_value == '1'):
                                 states[symptom_state].remove_min()
                         else:
-                            # need to handle the topic of different confirmed
+                            # need to handle symptom A when asking symptom B
                             if is_doctor_confirming_symptom(states[current_state].peek_head()[0]):
                                 # if patient's response confirmed topic of other state
                                 if is_symptom_topic_confirmed(symptom_topic):
@@ -321,7 +324,9 @@ def process_state(history, text):
         response = "抱歉，內部錯誤...\n" + doctor_messages[current_state][topic]
     else:
         if symptom_topic_value == '1' and symptom_topic == 'Confirm_State':
-            response = '医生: ' + comfort_rrq.pop() + doctor_messages[current_state][topic]
+            comfort_str = comfort_q.pop()
+            response = '医生: ' + comfort_str + doctor_messages[current_state][topic]
+            comfort_q.push(comfort_str)
         else:
             response = '医生: ' + doctor_messages[current_state][topic]
 
@@ -390,24 +395,20 @@ with gr.Blocks() as demo:
         return total_points
 
 
-def memory_queue_factory(priority):
-    return FifoMemoryQueue()
-
-
-def initial_comfort_rrq():
-    global comfort_rrq
-    comfort_rrq = RoundRobinQueue(qfactory=memory_queue_factory)
-    comfort_rrq.push('嗯嗯! 我明白了。', 0)
-    comfort_rrq.push('好的, 我了解了。', 1)
-    comfort_rrq.push('好的', 2)
-    comfort_rrq.push('明白', 3)
-    comfort_rrq.push('啊，这样子', 4)
+def initial_comfort_q():
+    global comfort_q
+    comfort_q = FifoMemoryQueue()
+    comfort_q.push('嗯嗯! 我明白了。')
+    comfort_q.push('好的, 我了解了。')
+    comfort_q.push('好的。')
+    comfort_q.push('明白。')
+    comfort_q.push('啊，这样子。')
 
 
 def main():
     global model, tokenizer, trainer, max_seq_length, model_args, training_args, data_args, comfort_rrq
 
-    initial_comfort_rrq()
+    initial_comfort_q()
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments))
     if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
         # If we pass only one argument to the script and it's the path to a json file,
